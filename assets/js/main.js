@@ -1,6 +1,6 @@
 /**
-* Template Name: Groovin - v4.7.1
-* Template URL: https://bootstrapmade.com/groovin-free-bootstrap-theme/
+* Template Name: MyResume - v4.7.0
+* Template URL: https://bootstrapmade.com/free-html-bootstrap-template-my-resume/
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 */
@@ -64,12 +64,9 @@
    * Scrolls to an element with header offset
    */
   const scrollto = (el) => {
-    let header = select('#header')
-    let offset = header.offsetHeight
-
     let elementPos = select(el).offsetTop
     window.scrollTo({
-      top: elementPos - offset,
+      top: elementPos,
       behavior: 'smooth'
     })
   }
@@ -94,20 +91,10 @@
    * Mobile nav toggle
    */
   on('click', '.mobile-nav-toggle', function(e) {
-    select('#navbar').classList.toggle('navbar-mobile')
+    select('body').classList.toggle('mobile-nav-active')
     this.classList.toggle('bi-list')
     this.classList.toggle('bi-x')
   })
-
-  /**
-   * Mobile nav dropdowns activate
-   */
-  on('click', '.navbar .dropdown > a', function(e) {
-    if (select('#navbar').classList.contains('navbar-mobile')) {
-      e.preventDefault()
-      this.nextElementSibling.classList.toggle('dropdown-active')
-    }
-  }, true)
 
   /**
    * Scrool with ofset on links with a class name .scrollto
@@ -116,9 +103,9 @@
     if (select(this.hash)) {
       e.preventDefault()
 
-      let navbar = select('#navbar')
-      if (navbar.classList.contains('navbar-mobile')) {
-        navbar.classList.remove('navbar-mobile')
+      let body = select('body')
+      if (body.classList.contains('mobile-nav-active')) {
+        body.classList.remove('mobile-nav-active')
         let navbarToggle = select('.mobile-nav-toggle')
         navbarToggle.classList.toggle('bi-list')
         navbarToggle.classList.toggle('bi-x')
@@ -139,16 +126,47 @@
   });
 
   /**
-   * Hero carousel indicators
+   * Preloader
    */
-  let heroCarouselIndicators = select("#hero-carousel-indicators")
-  let heroCarouselItems = select('#heroCarousel .carousel-item', true)
+  let preloader = select('#preloader');
+  if (preloader) {
+    window.addEventListener('load', () => {
+      preloader.remove()
+    });
+  }
 
-  heroCarouselItems.forEach((item, index) => {
-    (index === 0) ?
-    heroCarouselIndicators.innerHTML += "<li data-bs-target='#heroCarousel' data-bs-slide-to='" + index + "' class='active'></li>":
-      heroCarouselIndicators.innerHTML += "<li data-bs-target='#heroCarousel' data-bs-slide-to='" + index + "'></li>"
-  });
+  /**
+   * Hero type effect
+   */
+  const typed = select('.typed')
+  if (typed) {
+    let typed_strings = typed.getAttribute('data-typed-items')
+    typed_strings = typed_strings.split(',')
+    new Typed('.typed', {
+      strings: typed_strings,
+      loop: true,
+      typeSpeed: 100,
+      backSpeed: 50,
+      backDelay: 2000
+    });
+  }
+
+  /**
+   * Skills animation
+   */
+  let skilsContent = select('.skills-content');
+  if (skilsContent) {
+    new Waypoint({
+      element: skilsContent,
+      offset: '80%',
+      handler: function(direction) {
+        let progress = select('.progress .progress-bar', true);
+        progress.forEach((el) => {
+          el.style.width = el.getAttribute('aria-valuenow') + '%'
+        });
+      }
+    })
+  }
 
   /**
    * Porfolio isotope and filter
@@ -157,8 +175,7 @@
     let portfolioContainer = select('.portfolio-container');
     if (portfolioContainer) {
       let portfolioIsotope = new Isotope(portfolioContainer, {
-        itemSelector: '.portfolio-item',
-        layoutMode: 'fitRows'
+        itemSelector: '.portfolio-item'
       });
 
       let portfolioFilters = select('#portfolio-flters li', true);
@@ -173,7 +190,9 @@
         portfolioIsotope.arrange({
           filter: this.getAttribute('data-filter')
         });
-
+        portfolioIsotope.on('arrangeComplete', function() {
+          AOS.refresh()
+        });
       }, true);
     }
 
@@ -184,6 +203,15 @@
    */
   const portfolioLightbox = GLightbox({
     selector: '.portfolio-lightbox'
+  });
+
+  /**
+   * Initiate portfolio details lightbox 
+   */
+  const portfolioDetailsLightbox = GLightbox({
+    selector: '.portfolio-details-lightbox',
+    width: '90%',
+    height: '90vh'
   });
 
   /**
@@ -201,6 +229,36 @@
       type: 'bullets',
       clickable: true
     }
+  });
+
+  /**
+   * Testimonials slider
+   */
+  new Swiper('.testimonials-slider', {
+    speed: 600,
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false
+    },
+    slidesPerView: 'auto',
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true
+    }
+  });
+
+  /**
+   * Animation on scroll
+   */
+  window.addEventListener('load', () => {
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-in-out',
+      once: true,
+      mirror: false
+    })
   });
 
 })()
