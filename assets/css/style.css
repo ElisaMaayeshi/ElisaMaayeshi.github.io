@@ -10,7 +10,7 @@
 --------------------------------------------------------------*/
 body {
   font-family: "Open Sans", sans-serif;
-  color: #272829;
+  color: #fff;
 }
 
 a {
@@ -268,13 +268,13 @@ h1, h2, h3, h4, h5, h6 {
   color: #45505b;
 }
 #hero p {
-  color: #45505b;
+  color: #cd2222;
   margin: 15px 0 0 0;
   font-size: 26px;
   font-family: "Poppins", sans-serif;
 }
 #hero p span {
-  color: #0563bb;
+  color: ##cd2222;
   letter-spacing: 1px;
 }
 #hero .social-links {
